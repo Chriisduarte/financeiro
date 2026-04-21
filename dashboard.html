@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chris · Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-elev: #121212;
+  --bg-elev-2: #181818;
+  --border: #262626;
+  --border-strong: #3a3a3a;
+  --text: #f5f5f0;
+  --text-dim: #a0a098;
+  --text-faint: #5a5a55;
+  --accent: #d4a64a;
+  --accent-dim: #8a6a2f;
+  --green: #7ab87a;
+  --red: #d46a5c;
+  --blue: #6a9dd4;
+  --purple: #a685d4;
+  --pink: #d485a8;
+  --orange: #d4925c;
+  --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 48px -12px rgba(0,0,0,0.5);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1200px 600px at 20% -10%, rgba(212,166,74,0.06), transparent 60%),
+    radial-gradient(800px 500px at 110% 20%, rgba(106,157,212,0.04), transparent 60%);
+}
+.noise::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+.app { position: relative; z-index: 2; display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+/* SIDEBAR */
+aside {
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  position: sticky; top: 0; height: 100vh;
+  display: flex; flex-direction: column;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+}
+.brand {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: 4px;
+}
+.brand small { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.15em; font-weight: 500; }
+.brand-sub { font-size: 11px; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 36px; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-section { font-size: 10px; letter-spacing: 0.2em; color: var(--text-faint); text-transform: uppercase; padding: 16px 10px 8px; }
+.nav button {
+  background: transparent; border: none; color: var(--text-dim);
+  text-align: left; padding: 9px 10px; border-radius: 6px; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  transition: all 0.15s;
+}
+.nav button:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+.nav button.active { background: var(--bg-elev); color: var(--text); box-shadow: inset 0 0 0 1px var(--border); }
+.nav button.active::before {
+  content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; margin-left: -10px;
+}
+.nav button.active { padding-left: 17px; }
+.nav svg { width: 15px; height: 15px; opacity: 0.7; }
+.sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px dashed var(--border); }
+.month-selector {
+  display: flex; gap: 6px; align-items: center; justify-content: space-between;
+  background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; margin-bottom: 10px;
+}
+.month-selector button { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 4px 6px; border-radius: 4px; }
+.month-selector button:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+.month-selector span { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; }
+
+/* MAIN */
+main { padding: 40px 48px 80px; min-width: 0; }
+.topbar { display: flex; justify-content: space-between; align-items: end; margin-bottom: 32px; gap: 24px; flex-wrap: wrap; }
+.page-title { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
+.page-subtitle { color: var(--text-dim); font-size: 13px; margin-top: 8px; letter-spacing: 0.02em; }
+.topbar-actions { display: flex; gap: 8px; }
+.btn {
+  background: var(--bg-elev); border: 1px solid var(--border); color: var(--text);
+  padding: 9px 14px; border-radius: 6px; cursor: pointer; font-family: inherit;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn:hover { border-color: var(--border-strong); background: var(--bg-elev-2); }
+.btn-primary { background: var(--accent); color: #1a1300; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { background: #e6b858; border-color: #e6b858; }
+.btn-danger { color: var(--red); }
+.btn svg { width: 13px; height: 13px; }
+
+/* GRID & CARDS */
+.grid { display: grid; gap: 16px; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: 1.4fr 1fr; }
+@media (max-width: 1100px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-strong); }
+.card-title { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 12px; font-weight: 600; }
+.card-value { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+.card-meta { font-size: 12px; color: var(--text-dim); margin-top: 6px; }
+.card.highlight { background: linear-gradient(135deg, rgba(212,166,74,0.08), transparent 70%); border-color: rgba(212,166,74,0.2); }
+.card.highlight .card-value { color: var(--accent); }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+.muted { color: var(--text-dim); }
+
+/* COACH BAR */
+.coach {
+  background: linear-gradient(135deg, #1a1303 0%, #0f0c03 100%);
+  border: 1px solid var(--accent-dim);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.coach::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.coach-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.coach-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  background: var(--accent); color: #1a1300;
+  padding: 3px 8px; border-radius: 3px; font-weight: 700; letter-spacing: 0.1em;
+}
+.coach-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+.coach-list { display: flex; flex-direction: column; gap: 10px; }
+.coach-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 12px 14px; background: rgba(0,0,0,0.3);
+  border-left: 2px solid var(--accent); border-radius: 4px;
+  font-size: 14px; line-height: 1.5;
+}
+.coach-item strong { color: var(--accent); font-weight: 600; }
+.coach-icon { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 12px; padding-top: 2px; min-width: 28px; }
+.coach-item.ok { border-left-color: var(--green); }
+.coach-item.ok .coach-icon { color: var(--green); }
+.coach-item.warn { border-left-color: var(--orange); }
+.coach-item.warn .coach-icon { color: var(--orange); }
+.coach-item.danger { border-left-color: var(--red); }
+.coach-item.danger .coach-icon { color: var(--red); }
+
+/* SECTIONS */
+.section { margin-top: 40px; }
+.section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+.section-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+.section-hint { font-size: 12px; color: var(--text-dim); }
+
+/* CHART CONTAINERS */
+.chart-wrap { height: 260px; position: relative; }
+.bars { display: flex; align-items: flex-end; gap: 6px; height: 100%; padding-top: 20px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.bar { width: 100%; background: var(--accent-dim); border-radius: 3px 3px 0 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; min-height: 2px; }
+.bar:hover { background: var(--accent); }
+.bar-value { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); position: absolute; top: -18px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.bar-label { font-size: 10px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+
+/* DONUT */
+.donut-wrap { display: flex; gap: 24px; align-items: center; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.legend-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+.legend-label { color: var(--text-dim); flex: 1; }
+.legend-value { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+/* TABLE */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); font-weight: 600; border-bottom: 1px solid var(--border); }
+td { padding: 12px; border-bottom: 1px solid var(--border); }
+tr:hover td { background: rgba(255,255,255,0.02); }
+td.mono, th.mono { font-family: 'JetBrains Mono', monospace; }
+td.right, th.right { text-align: right; }
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px;
+  font-family: 'JetBrains Mono', monospace; font-weight: 500; letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tag-pj { background: rgba(106,157,212,0.15); color: var(--blue); }
+.tag-pf { background: rgba(212,133,168,0.15); color: var(--pink); }
+.tag-fix { background: rgba(212,166,74,0.12); color: var(--accent); }
+.tag-var { background: rgba(122,184,122,0.12); color: var(--green); }
+.tag-sub { background: rgba(166,133,212,0.12); color: var(--purple); }
+.tag-parc { background: rgba(212,146,92,0.12); color: var(--orange); }
+
+/* FILTERS */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-pill {
+  background: var(--bg-elev); border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
+  color: var(--text-dim); font-family: inherit; transition: all 0.15s;
+}
+.filter-pill:hover { color: var(--text); border-color: var(--border-strong); }
+.filter-pill.active { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 500; }
+
+/* FORMS */
+.form-grid { display: grid; gap: 12px; grid-template-columns: repeat(6, 1fr); }
+.form-grid .col-2 { grid-column: span 2; }
+.form-grid .col-3 { grid-column: span 3; }
+.form-grid .col-6 { grid-column: span 6; }
+label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); font-weight: 600; display: block; margin-bottom: 4px; }
+input, select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  padding: 9px 11px; border-radius: 6px; font-family: inherit; font-size: 13px;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus { outline: none; border-color: var(--accent); }
+input[type="number"] { font-family: 'JetBrains Mono', monospace; }
+
+/* SEMAPHORE */
+.gauge {
+  display: flex; gap: 4px; height: 8px; border-radius: 4px; overflow: hidden;
+  margin-top: 12px;
+}
+.gauge-seg { flex: 1; background: var(--border); border-radius: 2px; transition: background 0.3s; }
+
+/* LIST ITEMS */
+.item-list { display: flex; flex-direction: column; gap: 2px; }
+.item-row {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+  padding: 12px 14px; border-radius: 6px; transition: background 0.15s;
+}
+.item-row:hover { background: rgba(255,255,255,0.02); }
+.item-icon {
+  width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  background: var(--bg-elev-2); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+  color: var(--text-dim);
+}
+.item-title { font-size: 13.5px; font-weight: 500; }
+.item-sub { font-size: 11px; color: var(--text-faint); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+.item-amount { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 14px; }
+.item-amount.negative { color: var(--red); }
+.item-amount.positive { color: var(--green); }
+
+/* EMPTY */
+.empty { text-align: center; padding: 60px 20px; color: var(--text-faint); }
+.empty-big { font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 8px; color: var(--text-dim); }
+
+/* MODAL */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal {
+  background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: 12px;
+  max-width: 560px; width: 100%; max-height: 90vh; overflow: auto; padding: 28px;
+  box-shadow: var(--shadow);
+}
+.modal h2 { font-family: 'Fraunces', serif; font-size: 24px; margin-bottom: 4px; letter-spacing: -0.02em; }
+.modal-sub { color: var(--text-dim); font-size: 13px; margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+/* PROJECTION */
+.proj-row {
+  display: grid; grid-template-columns: 80px 1fr 120px; gap: 16px;
+  padding: 14px 16px; border-bottom: 1px solid var(--border); align-items: center;
+}
+.proj-month { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: var(--accent); }
+.proj-bar-wrap { height: 6px; background: var(--bg-elev-2); border-radius: 3px; overflow: hidden; position: relative; }
+.proj-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-dim), var(--accent)); border-radius: 3px; transition: width 0.6s; }
+.proj-amount { font-family: 'JetBrains Mono', monospace; text-align: right; font-weight: 600; }
+
+/* BALANCE SPARK */
+.spark { height: 40px; width: 100%; }
+
+/* FADE IN */
+.view { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+/* RULE / BADGES */
+.badge { display: inline-flex; gap: 6px; align-items: center; font-size: 11px; color: var(--text-dim); background: var(--bg-elev-2); padding: 4px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* RESPONSIVE */
+@media (max-width: 820px) {
+  .app { grid-template-columns: 1fr; }
+  aside { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  main { padding: 24px; }
+  .page-title { font-size: 32px; }
+}
+</style>
+</head>
+<body class="noise">
+<div class="app">
+  <aside>
+    <div class="brand">Capital<small>CHRIS</small></div>
+    <div class="brand-sub">Agência Fora da Caixa</div>
+
+    <div class="month-selector">
+      <button id="prevMonth">‹</button>
+      <span id="monthLabel">—</span>
+      <button id="nextMonth">›</button>
+    </div>
+
+    <nav class="nav" id="nav">
+      <div class="nav-section">Panorama</div>
+      <button data-view="home" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+        Home
+      </button>
+      <button data-view="coach">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+        Coach
+      </button>
+      <button data-view="projection">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+        Projeção
+      </button>
+
+      <div class="nav-section">Lançamentos</div>
+      <button data-view="transactions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Extrato
+      </button>
+      <button data-view="categories">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Categorias
+      </button>
+      <button data-view="accounts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M3 11h18"/></svg>
+        Contas & Cartões
+      </button>
+
+      <div class="nav-section">Compromissos</div>
+      <button data-view="fixed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Fixos
+      </button>
+      <button data-view="subscriptions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.2 16.2l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.2 7.8l2.8-2.8"/></svg>
+        Assinaturas
+      </button>
+      <button data-view="installments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16v4H4zM4 14h16v4H4z"/></svg>
+        Parcelas
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn" style="width:100%; justify-content:center;" id="exportBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Exportar JSON
+      </button>
+      <button class="btn btn-danger" style="width:100%; justify-content:center; margin-top:6px;" id="resetBtn">Resetar dados</button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- conteúdo -->
+  </main>
+</div>
+
+<script>
+// ============================================================
+// DATA LAYER — storage persistente
+// ============================================================
+const fmt = (n) => 'R$ ' + Number(n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtShort = (n) => {
+  const abs = Math.abs(n);
+  if (abs >= 1000) return (n/1000).toFixed(1).replace('.0','') + 'k';
+  return Math.round(n).toString();
+};
+const todayISO = () => new Date().toISOString().slice(0,10);
+const monthKey = (d) => d.slice(0,7);
+const monthName = (k) => {
+  const [y,m] = k.split('-');
+  const names = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return `${names[+m-1]} ${y}`;
+};
+
+// Contas e cartões do Christian
+const ACCOUNTS = [
+  { id: 'c6pj', name: 'C6 PJ', tipo: 'PJ', kind: 'conta' },
+  { id: 'c6cartao1979', name: 'C6 PJ · 1979', tipo: 'PJ', kind: 'cartao' },
+  { id: 'c6cartao5585', name: 'C6 PJ · 5585 virtual', tipo: 'PJ', kind: 'cartao' },
+  { id: 'inter', name: 'Inter PF', tipo: 'PF', kind: 'cartao' },
+  { id: 'nubankpf', name: 'Nubank PF', tipo: 'PF', kind: 'cartao' },
+  { id: 'nubankpj', name: 'Nubank PJ', tipo: 'PJ', kind: 'cartao' },
+  { id: 'mercadopago', name: 'Mercado Pago', tipo: 'PF', kind: 'cartao' },
+  { id: 'sicredi', name: 'Sicredi Maria', tipo: 'PF', kind: 'conta' },
+  { id: 'infinitepay', name: 'Infinitepay', tipo: 'PJ', kind: 'conta' },
+];
+
+const CATEGORIES_PJ = ['Equipe','Aluguel PJ','Tráfego','Ferramentas PJ','Contador','Imposto','Assinatura PJ','Parcelas PJ','Agência','Mentoria','Outros PJ'];
+const CATEGORIES_PF = ['Mercado','Restaurante','Saúde','Financiamento','Casa','Pet','Educação','Lazer','Assinatura PF','Parcelas PF','Outros PF'];
+
+const CATEGORY_COLORS = {
+  'Equipe': '#6a9dd4', 'Aluguel PJ': '#d4a64a', 'Tráfego': '#d46a5c', 'Ferramentas PJ': '#a685d4',
+  'Contador': '#7ab87a', 'Imposto': '#d485a8', 'Assinatura PJ': '#d4925c', 'Parcelas PJ': '#c4c4a8',
+  'Agência': '#6abcc4', 'Mentoria': '#b4a068', 'Outros PJ': '#8a8a8a',
+  'Mercado': '#7ab87a', 'Restaurante': '#d4925c', 'Saúde': '#d46a5c', 'Financiamento': '#d4a64a',
+  'Casa': '#6a9dd4', 'Pet': '#a685d4', 'Educação': '#d485a8', 'Lazer': '#6abcc4',
+  'Assinatura PF': '#c4c4a8', 'Parcelas PF': '#b48060', 'Outros PF': '#8a8a8a',
+  'Receita': '#7ab87a', 'Receita Cliente': '#7ab87a'
+};
+
+// SEED — dados pré-carregados do contexto do Christian
+const SEED = {
+  // Receitas
+  incomes: [
+    // fatura mensal média (pré-populada pra visualizar — o usuário pode editar)
+    { id: 'inc-seed-1', type: 'income', category: 'Receita Cliente', account: 'infinitepay', description: 'Faturamento médio mentorias (Infinitepay)', amount: 18000, date: `${todayISO().slice(0,7)}-05`, fixo: false, tipo: 'PJ' },
+  ],
+  // Custos fixos PJ
+  fixed_pj: [
+    { name: 'Ryan (designer/editor)', category: 'Equipe', amount: 1100, day: 5, account: 'c6pj' },
+    { name: 'Larissa', category: 'Equipe', amount: 1200, day: 5, account: 'c6pj' },
+    { name: 'Aluguel escritório (Águia Imobiliária)', category: 'Aluguel PJ', amount: 900, day: 10, account: 'c6pj' },
+    { name: 'Contador', category: 'Contador', amount: 295, day: 15, account: 'c6pj' },
+    { name: 'Internet Clicknet', category: 'Ferramentas PJ', amount: 99, day: 10, account: 'c6pj' },
+    { name: 'Imposto DAS', category: 'Imposto', amount: 52, day: 20, account: 'c6pj' },
+    { name: 'Rescisão Luís (14x restantes)', category: 'Parcelas PJ', amount: 333, day: 10, account: 'c6pj', remaining: 14 },
+  ],
+  // Custos fixos PF
+  fixed_pf: [
+    { name: 'Financiamento Argo', category: 'Financiamento', amount: 1593, day: 10, account: 'sicredi', remaining: 37 },
+    { name: 'Plano de Saúde Samaritano', category: 'Saúde', amount: 675, day: 15, account: 'sicredi' },
+    { name: 'Faxineira', category: 'Casa', amount: 220, day: 20, account: 'sicredi' },
+    { name: 'CPFL (luz)', category: 'Casa', amount: 186, day: 15, account: 'sicredi' },
+    { name: 'SABESP (água)', category: 'Casa', amount: 66, day: 18, account: 'sicredi' },
+    { name: 'Academia Pavão', category: 'Saúde', amount: 80, day: 5, account: 'sicredi' },
+    { name: 'Futebol + Dízimo', category: 'Lazer', amount: 70, day: 10, account: 'sicredi' },
+  ],
+  // Assinaturas PJ
+  subs_pj: [
+    { name: 'ChatGPT Plus', category: 'Assinatura PJ', amount: 99.90, account: 'c6cartao1979' },
+    { name: 'Claude Pro (2 contas)', category: 'Assinatura PJ', amount: 219.80, account: 'c6cartao1979' },
+    { name: 'Notion Plus', category: 'Assinatura PJ', amount: 99.90, account: 'c6cartao1979' },
+    { name: 'Reportei', category: 'Assinatura PJ', amount: 119.90, account: 'c6cartao1979' },
+    { name: 'CapCut', category: 'Assinatura PJ', amount: 32.90, account: 'c6cartao1979' },
+    { name: 'Ovzon TikTok Sorter', category: 'Assinatura PJ', amount: 25.88, account: 'c6cartao1979' },
+  ],
+  // Assinaturas PF
+  subs_pf: [
+    { name: 'iCloud+ 2TB', category: 'Assinatura PF', amount: 66.90, account: 'nubankpf' },
+    { name: 'Google Drive 2TB', category: 'Assinatura PF', amount: 49.99, account: 'nubankpf' },
+    { name: 'Meta Verified', category: 'Assinatura PF', amount: 53.90, account: 'nubankpf' },
+    { name: 'Goodnotes', category: 'Assinatura PF', amount: 59.90, account: 'nubankpf' },
+    { name: 'TickTick', category: 'Assinatura PF', amount: 14.90, account: 'nubankpf' },
+  ],
+  // Parcelas rolando
+  installments: [
+    { name: 'Macbook Toledo Imports', category: 'Parcelas PJ', amount: 137, remaining: 11, account: 'c6cartao1979', tipo: 'PJ' },
+    { name: 'Vet S. Franci', category: 'Parcelas PF', amount: 150, remaining: 3, account: 'nubankpf', tipo: 'PF' },
+    { name: 'Curso CNPJ', category: 'Parcelas PJ', amount: 47, remaining: 4, account: 'c6cartao1979', tipo: 'PJ' },
+    { name: 'MercadoLivre (várias)', category: 'Parcelas PF', amount: 230, remaining: 9, account: 'mercadopago', tipo: 'PF' },
+    { name: 'DVN Copy Ltda', category: 'Parcelas PJ', amount: 26, remaining: 3, account: 'c6cartao1979', tipo: 'PJ' },
+    { name: 'Hubla + Kiwify cursos', category: 'Parcelas PF', amount: 30, remaining: 2, account: 'nubankpf', tipo: 'PF' },
+  ],
+  // Saldos iniciais das contas (editáveis)
+  balances: {
+    c6pj: 15287.64, infinitepay: 0, sicredi: 0,
+    c6cartao1979: 0, c6cartao5585: 0, inter: 0, nubankpf: 0, nubankpj: 0, mercadopago: 0,
+  }
+};
+
+// Storage wrappers
+async function loadData() {
+  try {
+    const res = await window.storage.get('chris:data');
+    if (res && res.value) return JSON.parse(res.value);
+  } catch(e) {}
+  return null;
+}
+async function saveData(d) {
+  try { await window.storage.set('chris:data', JSON.stringify(d)); } catch(e) { console.error(e); }
+}
+
+// Inicializa dados (monta transações recorrentes do mês corrente a partir do SEED)
+function buildInitialData() {
+  const data = {
+    currentMonth: todayISO().slice(0,7),
+    accounts: ACCOUNTS.map(a => ({ ...a, balance: SEED.balances[a.id] || 0 })),
+    transactions: [],
+    fixed_pj: SEED.fixed_pj,
+    fixed_pf: SEED.fixed_pf,
+    subs_pj: SEED.subs_pj,
+    subs_pf: SEED.subs_pf,
+    installments: SEED.installments,
+    version: 2,
+  };
+  // popular transações recorrentes dos últimos 3 meses
+  const today = new Date();
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    data.fixed_pj.forEach(f => data.transactions.push({
+      id: `fpj-${mk}-${f.name}`, type: 'expense', category: f.category, account: f.account,
+      description: f.name, amount: f.amount, date: `${mk}-${String(f.day).padStart(2,'0')}`, fixo: true, tipo: 'PJ'
+    }));
+    data.fixed_pf.forEach(f => data.transactions.push({
+      id: `fpf-${mk}-${f.name}`, type: 'expense', category: f.category, account: f.account,
+      description: f.name, amount: f.amount, date: `${mk}-${String(f.day).padStart(2,'0')}`, fixo: true, tipo: 'PF'
+    }));
+    data.subs_pj.forEach(s => data.transactions.push({
+      id: `spj-${mk}-${s.name}`, type: 'expense', category: s.category, account: s.account,
+      description: `${s.name} (assinatura)`, amount: s.amount, date: `${mk}-05`, fixo: true, tipo: 'PJ'
+    }));
+    data.subs_pf.forEach(s => data.transactions.push({
+      id: `spf-${mk}-${s.name}`, type: 'expense', category: s.category, account: s.account,
+      description: `${s.name} (assinatura)`, amount: s.amount, date: `${mk}-10`, fixo: true, tipo: 'PF'
+    }));
+    data.installments.forEach(p => data.transactions.push({
+      id: `parc-${mk}-${p.name}`, type: 'expense', category: p.category, account: p.account,
+      description: p.name + ' (parcela)', amount: p.amount, date: `${mk}-15`, fixo: true, tipo: p.tipo
+    }));
+  }
+  // receitas médias últimos 3 meses
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    data.transactions.push({
+      id: `inc-${mk}`, type: 'income', category: 'Receita Cliente', account: 'infinitepay',
+      description: 'Faturamento mentorias (estimado)', amount: 18000, date: `${mk}-05`, fixo: false, tipo: 'PJ'
+    });
+  }
+  return data;
+}
+
+// Estado global
+let DATA = null;
+let currentView = 'home';
+
+// ============================================================
+// COMPUTE — métricas
+// ============================================================
+function computeMonth(mk, tipo) {
+  const txs = DATA.transactions.filter(t => monthKey(t.date) === mk && (tipo ? t.tipo === tipo : true));
+  const income = txs.filter(t => t.type === 'income').reduce((s,t) => s + Number(t.amount), 0);
+  const expense = txs.filter(t => t.type === 'expense').reduce((s,t) => s + Number(t.amount), 0);
+  return { income, expense, balance: income - expense, txs };
+}
+
+function computeByCategory(mk, tipo) {
+  const { txs } = computeMonth(mk, tipo);
+  const map = {};
+  txs.filter(t => t.type === 'expense').forEach(t => {
+    map[t.category] = (map[t.category] || 0) + Number(t.amount);
+  });
+  return Object.entries(map).sort((a,b) => b[1]-a[1]);
+}
+
+function computeByAccount(mk) {
+  const { txs } = computeMonth(mk);
+  const map = {};
+  txs.filter(t => t.type === 'expense').forEach(t => {
+    map[t.account] = (map[t.account] || 0) + Number(t.amount);
+  });
+  return Object.entries(map).sort((a,b) => b[1]-a[1]);
+}
+
+function computeProjection(monthsAhead = 6) {
+  const base = DATA.currentMonth;
+  const [by, bm] = base.split('-').map(Number);
+  const projection = [];
+  for (let i = 0; i <= monthsAhead; i++) {
+    const d = new Date(by, bm - 1 + i, 1);
+    const mk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const fixos = [...DATA.fixed_pj, ...DATA.fixed_pf, ...DATA.subs_pj, ...DATA.subs_pf]
+      .reduce((s,x) => s + (x.amount || 0), 0);
+    const parcelasAtivas = DATA.installments.filter(p => (p.remaining || 0) > i);
+    const parc = parcelasAtivas.reduce((s,p) => s + p.amount, 0);
+    projection.push({ mk, fixos, parcelas: parc, total: fixos + parc });
+  }
+  return projection;
+}
+
+function getTotalFixed(tipo) {
+  const set = tipo === 'PJ' ? [...DATA.fixed_pj, ...DATA.subs_pj] : [...DATA.fixed_pf, ...DATA.subs_pf];
+  return set.reduce((s,x) => s + x.amount, 0);
+}
+
+function getActiveInstallments(tipo) {
+  return DATA.installments.filter(p => !tipo || p.tipo === tipo).reduce((s,p) => s + p.amount, 0);
+}
+
+// ============================================================
+// VIEWS
+// ============================================================
+function render() {
+  const main = document.getElementById('main');
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+  document.getElementById('monthLabel').textContent = monthName(DATA.currentMonth);
+  main.innerHTML = '<div class="view">' + VIEWS[currentView]() + '</div>';
+  // after render — ativar listeners
+  if (afterRender[currentView]) afterRender[currentView]();
+}
+
+const afterRender = {};
+
+// ============================================================
+// HOME
+// ============================================================
+const VIEWS = {};
+
+VIEWS.home = () => {
+  const mk = DATA.currentMonth;
+  const pj = computeMonth(mk, 'PJ');
+  const pf = computeMonth(mk, 'PF');
+  const total = computeMonth(mk);
+  const fixPJ = getTotalFixed('PJ');
+  const fixPF = getTotalFixed('PF');
+  const parcActive = getActiveInstallments();
+  const saldoPJ = DATA.accounts.filter(a => a.tipo === 'PJ' && a.kind === 'conta').reduce((s,a) => s + a.balance, 0);
+
+  // histórico ultimos 6 meses
+  const today = new Date();
+  const history = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    const mk2 = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const m = computeMonth(mk2);
+    history.push({ mk: mk2, label: monthName(mk2).split(' ')[0], balance: m.balance, income: m.income, expense: m.expense });
+  }
+  const maxAbs = Math.max(...history.map(h => Math.max(h.income, h.expense)), 1);
+
+  const catPJ = computeByCategory(mk, 'PJ').slice(0, 5);
+  const catPF = computeByCategory(mk, 'PF').slice(0, 5);
+
+  return `
+    ${renderCoach()}
+
+    <div class="topbar">
+      <div>
+        <div class="page-title">Panorama</div>
+        <div class="page-subtitle">Visão consolidada de ${monthName(mk)}</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary" onclick="openAddModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+          Novo lançamento
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card highlight">
+        <div class="card-title">Saldo PJ atual</div>
+        <div class="card-value">${fmt(saldoPJ)}</div>
+        <div class="card-meta">C6 PJ + contas PJ</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Receita do mês</div>
+        <div class="card-value positive">${fmt(total.income)}</div>
+        <div class="card-meta">PJ ${fmt(pj.income)} · PF ${fmt(pf.income)}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Despesa do mês</div>
+        <div class="card-value negative">${fmt(total.expense)}</div>
+        <div class="card-meta">PJ ${fmt(pj.expense)} · PF ${fmt(pf.expense)}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sobra projetada</div>
+        <div class="card-value ${total.balance >= 0 ? 'positive' : 'negative'}">${fmt(total.balance)}</div>
+        <div class="card-meta">Receita − Despesa</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">PJ vs PF</div>
+        <div class="section-hint">Separação crítica — nunca misture</div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">PJ · Agência</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px;">
+            <div>
+              <div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">Receita</div>
+              <div class="card-value positive" style="font-size:22px;">${fmt(pj.income)}</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">Despesa</div>
+              <div class="card-value negative" style="font-size:22px;">${fmt(pj.expense)}</div>
+            </div>
+          </div>
+          <div class="divider" style="margin:16px 0;"></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span class="muted">Custo fixo mensal PJ</span>
+            <span class="mono" style="font-family:'JetBrains Mono',monospace;font-weight:600;">${fmt(fixPJ)}</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">PF · Pessoal</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px;">
+            <div>
+              <div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">Receita</div>
+              <div class="card-value positive" style="font-size:22px;">${fmt(pf.income)}</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-faint);margin-bottom:4px;">Despesa</div>
+              <div class="card-value negative" style="font-size:22px;">${fmt(pf.expense)}</div>
+            </div>
+          </div>
+          <div class="divider" style="margin:16px 0;"></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span class="muted">Custo fixo mensal PF</span>
+            <span class="mono" style="font-family:'JetBrains Mono',monospace;font-weight:600;">${fmt(fixPF)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Balanço · últimos 6 meses</div>
+      </div>
+      <div class="card">
+        <div class="chart-wrap">
+          <div class="bars">
+            ${history.map(h => {
+              const hIn = (h.income / maxAbs) * 100;
+              const hEx = (h.expense / maxAbs) * 100;
+              return `
+                <div class="bar-col">
+                  <div style="display:flex;gap:2px;width:100%;align-items:flex-end;height:100%;">
+                    <div class="bar" style="background:var(--green);height:${hIn}%;">
+                      <div class="bar-value">${fmtShort(h.income)}</div>
+                    </div>
+                    <div class="bar" style="background:var(--red);height:${hEx}%;"></div>
+                  </div>
+                  <div class="bar-label">${h.label}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;font-size:12px;">
+          <div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;background:var(--green);border-radius:2px;"></span><span class="muted">Receita</span></div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;background:var(--red);border-radius:2px;"></span><span class="muted">Despesa</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">Top 5 categorias · PJ</div>
+          ${renderTopList(catPJ, pj.expense)}
+        </div>
+        <div class="card">
+          <div class="card-title">Top 5 categorias · PF</div>
+          ${renderTopList(catPF, pf.expense)}
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Últimos lançamentos</div>
+        <a class="section-hint" href="#" onclick="go('transactions');return false;">Ver todos →</a>
+      </div>
+      <div class="card" style="padding:8px;">
+        ${renderRecentTxs(8)}
+      </div>
+    </div>
+  `;
+};
+
+function renderTopList(pairs, total) {
+  if (!pairs.length) return '<div class="empty" style="padding:30px 10px;">Sem gastos ainda</div>';
+  return '<div style="margin-top:8px;">' + pairs.map(([cat, val]) => {
+    const pct = total > 0 ? (val/total*100) : 0;
+    const color = CATEGORY_COLORS[cat] || '#888';
+    return `
+      <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+          <span>${cat}</span>
+          <span class="mono" style="font-family:'JetBrains Mono',monospace;font-weight:600;">${fmt(val)}</span>
+        </div>
+        <div style="height:4px;background:var(--bg-elev-2);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${color};"></div>
+        </div>
+      </div>
+    `;
+  }).join('') + '</div>';
+}
+
+function renderRecentTxs(n) {
+  const txs = [...DATA.transactions].sort((a,b) => b.date.localeCompare(a.date)).slice(0, n);
+  if (!txs.length) return '<div class="empty">Nenhum lançamento ainda</div>';
+  return '<div class="item-list">' + txs.map(t => {
+    const acc = DATA.accounts.find(a => a.id === t.account);
+    const color = CATEGORY_COLORS[t.category] || '#888';
+    const sign = t.type === 'income' ? '+' : '−';
+    return `
+      <div class="item-row">
+        <div class="item-icon" style="background:${color}22;color:${color};">${(t.category||'?').substring(0,2).toUpperCase()}</div>
+        <div>
+          <div class="item-title">${t.description}</div>
+          <div class="item-sub">${t.date} · <span class="tag ${t.tipo==='PJ'?'tag-pj':'tag-pf'}">${t.tipo||'-'}</span> ${t.category} · ${acc?acc.name:'—'}</div>
+        </div>
+        <div class="item-amount ${t.type==='income'?'positive':'negative'}">${sign} ${fmt(t.amount)}</div>
+      </div>
+    `;
+  }).join('') + '</div>';
+}
+
+// ============================================================
+// COACH
+// ============================================================
+function generateCoachInsights() {
+  const mk = DATA.currentMonth;
+  const pj = computeMonth(mk, 'PJ');
+  const pf = computeMonth(mk, 'PF');
+  const total = computeMonth(mk);
+  const fixPJ = getTotalFixed('PJ');
+  const fixPF = getTotalFixed('PF');
+  const parcAtivas = DATA.installments.length;
+  const insights = [];
+
+  // Regra 1: sobra PJ
+  if (pj.income > 0 && pj.balance < (pj.income * 0.15)) {
+    insights.push({
+      level: 'warn',
+      text: `PJ está apertado. Faturou <strong>${fmt(pj.income)}</strong>, sobrou <strong>${fmt(pj.balance)}</strong>. Meta saudável: sobrar pelo menos 20% (${fmt(pj.income*0.2)}).`
+    });
+  } else if (pj.income > 0 && pj.balance >= (pj.income * 0.2)) {
+    insights.push({
+      level: 'ok',
+      text: `PJ com folga: sobrou <strong>${fmt(pj.balance)}</strong> (${((pj.balance/pj.income)*100).toFixed(0)}% da receita). Faz pró-labore e separa 20% pra reserva.`
+    });
+  }
+
+  // Regra 2: PF vs receita PJ (ele vive da agência)
+  const proLaboreNecessario = fixPF + (parcAtivas > 0 ? getActiveInstallments('PF') : 0);
+  if (proLaboreNecessario > 0) {
+    insights.push({
+      level: 'info',
+      text: `Seu <strong>pró-labore mínimo</strong> pra cobrir PF fixo + parcelas é <strong>${fmt(proLaboreNecessario)}</strong>/mês. Qualquer valor abaixo disso te força a puxar do PJ.`
+    });
+  }
+
+  // Regra 3: assinaturas
+  const subsTotal = DATA.subs_pj.reduce((s,x)=>s+x.amount,0) + DATA.subs_pf.reduce((s,x)=>s+x.amount,0);
+  if (subsTotal > 600) {
+    insights.push({
+      level: 'warn',
+      text: `<strong>${fmt(subsTotal)}/mês em assinaturas</strong> (${DATA.subs_pj.length + DATA.subs_pf.length} ativas). Revisar: qual você usou nos últimos 7 dias? O que não usou, cancela hoje.`
+    });
+  }
+
+  // Regra 4: parcelas
+  const parcTotal = getActiveInstallments();
+  if (parcTotal > 500) {
+    insights.push({
+      level: 'warn',
+      text: `<strong>${fmt(parcTotal)}/mês só em parcelas</strong>. Antes de qualquer nova compra parcelada: essa parcela entra no lugar de qual outra? Se a resposta não é óbvia, <strong>não parcela</strong>.`
+    });
+  }
+
+  // Regra 5: maior gasto variável PF
+  const catPF = computeByCategory(mk, 'PF');
+  const variavel = catPF.find(([cat]) => ['Restaurante','Mercado','Lazer'].includes(cat));
+  if (variavel && variavel[1] > 800) {
+    insights.push({
+      level: 'info',
+      text: `<strong>${variavel[0]}</strong> tá em <strong>${fmt(variavel[1])}</strong> esse mês. Se quiser cortar algo sem dor, esse é o ponto.`
+    });
+  }
+
+  // Regra 6: receita vs fixos (sustentabilidade)
+  if (total.income > 0) {
+    const cobrertura = total.income / (fixPJ + fixPF);
+    if (cobrertura < 1.3) {
+      insights.push({
+        level: 'danger',
+        text: `Receita cobre fixo só <strong>${cobrertura.toFixed(1)}x</strong>. Qualquer mês ruim te quebra. Prioridade #1: fechar 2-3 novas mentorias antes de qualquer corte.`
+      });
+    } else if (cobrertura >= 1.8) {
+      insights.push({
+        level: 'ok',
+        text: `Receita cobre fixo <strong>${cobrertura.toFixed(1)}x</strong>. Margem saudável. Hora de automatizar uma reserva de emergência (meta: 3x do fixo mensal).`
+      });
+    }
+  }
+
+  // Regra 7: ação do dia
+  insights.push({
+    level: 'info',
+    text: `<strong>Ação de hoje:</strong> abre a conta do C6 PJ e registra todos os PIX que entraram da Infinitepay. PIX que aparecem como "Christian Sanches Duarte" ou "32.893.715 CHRISTIAN" são transferência interna — não conta como receita nova.`
+  });
+
+  return insights;
+}
+
+function renderCoach() {
+  const insights = generateCoachInsights().slice(0, 4);
+  return `
+    <div class="coach">
+      <div class="coach-header">
+        <span class="coach-label">COACH</span>
+        <span class="coach-title">Direto ao ponto</span>
+      </div>
+      <div class="coach-list">
+        ${insights.map((i, idx) => `
+          <div class="coach-item ${i.level}">
+            <div class="coach-icon">${String(idx+1).padStart(2,'0')}</div>
+            <div>${i.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+VIEWS.coach = () => {
+  const insights = generateCoachInsights();
+  const mk = DATA.currentMonth;
+  const total = computeMonth(mk);
+  const fixPJ = getTotalFixed('PJ');
+  const fixPF = getTotalFixed('PF');
+  const parcTotal = getActiveInstallments();
+
+  // Semáforo
+  const scorePJ = (() => {
+    const pj = computeMonth(mk, 'PJ');
+    if (!pj.income) return 0;
+    const sobra = pj.balance / pj.income;
+    if (sobra >= 0.2) return 3;
+    if (sobra >= 0.1) return 2;
+    if (sobra >= 0) return 1;
+    return 0;
+  })();
+  const scorePF = (() => {
+    const pf = computeMonth(mk, 'PF');
+    if (pf.expense > fixPF * 1.5) return 0;
+    if (pf.expense > fixPF * 1.2) return 1;
+    if (pf.expense > fixPF) return 2;
+    return 3;
+  })();
+  const scoreParc = parcTotal < 300 ? 3 : parcTotal < 500 ? 2 : parcTotal < 700 ? 1 : 0;
+  const scoreAssin = (() => {
+    const total = DATA.subs_pj.reduce((s,x)=>s+x.amount,0) + DATA.subs_pf.reduce((s,x)=>s+x.amount,0);
+    if (total < 500) return 3;
+    if (total < 700) return 2;
+    if (total < 900) return 1;
+    return 0;
+  })();
+
+  const gaugeHTML = (score) => {
+    const colors = ['var(--border)','var(--red)','var(--orange)','var(--accent)','var(--green)'];
+    const color = colors[score + 1] || 'var(--border)';
+    return `<div class="gauge">${[0,1,2].map(i => `<div class="gauge-seg" style="background:${i < score ? color : 'var(--border)'}"></div>`).join('')}</div>`;
+  };
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Coach</div>
+        <div class="page-subtitle">O que fazer agora. Sem enrolação.</div>
+      </div>
+    </div>
+
+    ${renderCoach()}
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Semáforo</div>
+        <div class="section-hint">Onde você tá saudável e onde tá sangrando</div>
+      </div>
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-title">Sobra PJ</div>
+          <div class="card-value" style="font-size:18px;color:${scorePJ>=2?'var(--green)':scorePJ>=1?'var(--orange)':'var(--red)'};">
+            ${['Crítico','Atenção','Ok','Saudável'][scorePJ]}
+          </div>
+          ${gaugeHTML(scorePJ)}
+        </div>
+        <div class="card">
+          <div class="card-title">Controle PF</div>
+          <div class="card-value" style="font-size:18px;color:${scorePF>=2?'var(--green)':scorePF>=1?'var(--orange)':'var(--red)'};">
+            ${['Crítico','Atenção','Ok','Saudável'][scorePF]}
+          </div>
+          ${gaugeHTML(scorePF)}
+        </div>
+        <div class="card">
+          <div class="card-title">Peso das parcelas</div>
+          <div class="card-value" style="font-size:18px;color:${scoreParc>=2?'var(--green)':scoreParc>=1?'var(--orange)':'var(--red)'};">
+            ${['Crítico','Pesado','Ok','Leve'][scoreParc]}
+          </div>
+          ${gaugeHTML(scoreParc)}
+        </div>
+        <div class="card">
+          <div class="card-title">Assinaturas</div>
+          <div class="card-value" style="font-size:18px;color:${scoreAssin>=2?'var(--green)':scoreAssin>=1?'var(--orange)':'var(--red)'};">
+            ${['Inflado','Gordo','Ok','Enxuto'][scoreAssin]}
+          </div>
+          ${gaugeHTML(scoreAssin)}
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" style="margin-bottom:16px;">Análise completa</div>
+      <div class="coach" style="margin-bottom:0;">
+        <div class="coach-list">
+          ${insights.map((i, idx) => `
+            <div class="coach-item ${i.level}">
+              <div class="coach-icon">${String(idx+1).padStart(2,'0')}</div>
+              <div>${i.text}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" style="margin-bottom:16px;">Onde você pode cortar (ranking)</div>
+      <div class="card">
+        ${renderCutRanking()}
+      </div>
+    </div>
+  `;
+};
+
+function renderCutRanking() {
+  // assinaturas ordenadas por valor (mais cortáveis primeiro)
+  const allSubs = [
+    ...DATA.subs_pj.map(s => ({...s, tipo: 'PJ'})),
+    ...DATA.subs_pf.map(s => ({...s, tipo: 'PF'}))
+  ].sort((a,b) => b.amount - a.amount);
+
+  const parcOrd = [...DATA.installments].sort((a,b) => b.amount - a.amount);
+
+  return `
+    <div class="card-title" style="margin-top:4px;">Assinaturas — revisa a cada 30 dias</div>
+    <div class="item-list" style="margin-bottom:20px;">
+      ${allSubs.map((s, i) => `
+        <div class="item-row">
+          <div class="item-icon">${String(i+1).padStart(2,'0')}</div>
+          <div>
+            <div class="item-title">${s.name}</div>
+            <div class="item-sub"><span class="tag ${s.tipo==='PJ'?'tag-pj':'tag-pf'}">${s.tipo}</span> ${s.category}</div>
+          </div>
+          <div class="item-amount negative">${fmt(s.amount)}/mês</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="card-title">Parcelas — não adicione mais nenhuma</div>
+    <div class="item-list">
+      ${parcOrd.map((p, i) => `
+        <div class="item-row">
+          <div class="item-icon">${String(i+1).padStart(2,'0')}</div>
+          <div>
+            <div class="item-title">${p.name}</div>
+            <div class="item-sub"><span class="tag ${p.tipo==='PJ'?'tag-pj':'tag-pf'}">${p.tipo}</span> ${p.remaining}x restantes · termina em ${p.remaining} meses</div>
+          </div>
+          <div class="item-amount negative">${fmt(p.amount)}/mês</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ============================================================
+// PROJECTION
+// ============================================================
+VIEWS.projection = () => {
+  const proj = computeProjection(11);
+  const max = Math.max(...proj.map(p => p.total));
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Projeção</div>
+        <div class="page-subtitle">O que vai sair da sua conta nos próximos 12 meses (fixos + parcelas)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:4px;">Custo fixo total + parcelas ativas</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:20px;">A barra diminui à medida que parcelas terminam</div>
+      <div>
+        ${proj.map(p => `
+          <div class="proj-row">
+            <div class="proj-month">${monthName(p.mk)}</div>
+            <div>
+              <div class="proj-bar-wrap">
+                <div class="proj-bar-fill" style="width:${(p.total/max*100)}%;"></div>
+              </div>
+              <div style="font-size:11px;color:var(--text-faint);margin-top:4px;font-family:'JetBrains Mono',monospace;">
+                fixos ${fmt(p.fixos)} + parcelas ${fmt(p.parcelas)}
+              </div>
+            </div>
+            <div class="proj-amount">${fmt(p.total)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" style="margin-bottom:16px;">Quando cada parcela termina</div>
+      <div class="card" style="padding:8px;">
+        <div class="item-list">
+          ${DATA.installments.map(p => {
+            const end = new Date();
+            end.setMonth(end.getMonth() + p.remaining);
+            const endLabel = monthName(`${end.getFullYear()}-${String(end.getMonth()+1).padStart(2,'0')}`);
+            return `
+              <div class="item-row">
+                <div class="item-icon">${p.remaining}x</div>
+                <div>
+                  <div class="item-title">${p.name}</div>
+                  <div class="item-sub">Termina em <strong style="color:var(--accent);">${endLabel}</strong> · <span class="tag ${p.tipo==='PJ'?'tag-pj':'tag-pf'}">${p.tipo}</span></div>
+                </div>
+                <div class="item-amount negative">${fmt(p.amount)}/mês</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+// ============================================================
+// TRANSACTIONS (extrato filtrável)
+// ============================================================
+let txFilter = { tipo: 'all', kind: 'all', category: 'all', account: 'all', search: '' };
+
+VIEWS.transactions = () => {
+  const mk = DATA.currentMonth;
+  let txs = DATA.transactions.filter(t => monthKey(t.date) === mk);
+  if (txFilter.tipo !== 'all') txs = txs.filter(t => t.tipo === txFilter.tipo);
+  if (txFilter.kind !== 'all') txs = txs.filter(t => t.type === txFilter.kind);
+  if (txFilter.category !== 'all') txs = txs.filter(t => t.category === txFilter.category);
+  if (txFilter.account !== 'all') txs = txs.filter(t => t.account === txFilter.account);
+  if (txFilter.search) {
+    const s = txFilter.search.toLowerCase();
+    txs = txs.filter(t => t.description.toLowerCase().includes(s) || t.category.toLowerCase().includes(s));
+  }
+  txs.sort((a,b) => b.date.localeCompare(a.date));
+
+  const allCats = [...new Set(DATA.transactions.map(t => t.category))];
+  const totals = txs.reduce((a,t) => {
+    if (t.type === 'income') a.income += Number(t.amount); else a.expense += Number(t.amount);
+    return a;
+  }, { income: 0, expense: 0 });
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Extrato</div>
+        <div class="page-subtitle">${txs.length} lançamento${txs.length===1?'':'s'} em ${monthName(mk)} · ${fmt(totals.income)} entrou · ${fmt(totals.expense)} saiu</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary" onclick="openAddModal()">+ Lançamento</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="filters">
+        <button class="filter-pill ${txFilter.tipo==='all'?'active':''}" onclick="setFilter('tipo','all')">Todos</button>
+        <button class="filter-pill ${txFilter.tipo==='PJ'?'active':''}" onclick="setFilter('tipo','PJ')">PJ</button>
+        <button class="filter-pill ${txFilter.tipo==='PF'?'active':''}" onclick="setFilter('tipo','PF')">PF</button>
+        <div style="width:1px;background:var(--border);margin:0 4px;"></div>
+        <button class="filter-pill ${txFilter.kind==='all'?'active':''}" onclick="setFilter('kind','all')">Receita + Despesa</button>
+        <button class="filter-pill ${txFilter.kind==='income'?'active':''}" onclick="setFilter('kind','income')">Só receita</button>
+        <button class="filter-pill ${txFilter.kind==='expense'?'active':''}" onclick="setFilter('kind','expense')">Só despesa</button>
+      </div>
+      <div class="filters">
+        <select onchange="setFilter('category', this.value)" style="width:auto;">
+          <option value="all" ${txFilter.category==='all'?'selected':''}>Todas categorias</option>
+          ${allCats.map(c => `<option value="${c}" ${txFilter.category===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+        <select onchange="setFilter('account', this.value)" style="width:auto;">
+          <option value="all" ${txFilter.account==='all'?'selected':''}>Todas contas</option>
+          ${DATA.accounts.map(a => `<option value="${a.id}" ${txFilter.account===a.id?'selected':''}>${a.name}</option>`).join('')}
+        </select>
+        <input type="text" placeholder="Buscar..." value="${txFilter.search}" oninput="setFilter('search', this.value)" style="width:200px;">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Conta</th>
+              <th>Tipo</th>
+              <th class="right">Valor</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${txs.length === 0 ? '<tr><td colspan="7"><div class="empty"><div class="empty-big">Nada aqui</div>Muda os filtros ou adiciona um lançamento</div></td></tr>' :
+              txs.map(t => {
+                const acc = DATA.accounts.find(a => a.id === t.account);
+                return `
+                  <tr>
+                    <td class="mono muted">${t.date.slice(5)}</td>
+                    <td>${t.description} ${t.fixo?'<span class="tag tag-fix" style="margin-left:6px;">fixo</span>':''}</td>
+                    <td><span style="color:${CATEGORY_COLORS[t.category]||'var(--text-dim)'};">●</span> ${t.category}</td>
+                    <td class="muted">${acc?acc.name:'—'}</td>
+                    <td><span class="tag ${t.tipo==='PJ'?'tag-pj':'tag-pf'}">${t.tipo||'-'}</span></td>
+                    <td class="mono right ${t.type==='income'?'positive':'negative'}">${t.type==='income'?'+':'−'} ${fmt(t.amount)}</td>
+                    <td><button class="btn" style="padding:4px 8px;font-size:11px;" onclick="deleteTx('${t.id}')">✕</button></td>
+                  </tr>
+                `;
+              }).join('')
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+};
+
+// ============================================================
+// CATEGORIES
+// ============================================================
+VIEWS.categories = () => {
+  const mk = DATA.currentMonth;
+  const pj = computeByCategory(mk, 'PJ');
+  const pf = computeByCategory(mk, 'PF');
+  const totalPJ = pj.reduce((s,x)=>s+x[1],0);
+  const totalPF = pf.reduce((s,x)=>s+x[1],0);
+
+  const renderDonut = (pairs, total, title) => {
+    if (!pairs.length) return `<div class="card"><div class="card-title">${title}</div><div class="empty">Sem dados</div></div>`;
+    let acc = 0;
+    const slices = pairs.map(([cat, val]) => {
+      const pct = val / total;
+      const start = acc;
+      acc += pct;
+      return { cat, val, pct, start, end: acc, color: CATEGORY_COLORS[cat] || '#888' };
+    });
+    const circ = 2 * Math.PI * 50;
+    return `
+      <div class="card">
+        <div class="card-title">${title}</div>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 140 140" width="160" height="160" style="transform:rotate(-90deg);">
+            ${slices.map(s => {
+              const dash = s.pct * circ;
+              const offset = -s.start * circ;
+              return `<circle cx="70" cy="70" r="50" fill="none" stroke="${s.color}" stroke-width="18" stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${offset}"/>`;
+            }).join('')}
+            <text x="70" y="70" text-anchor="middle" fill="var(--text)" transform="rotate(90 70 70)" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;">${fmtShort(total)}</text>
+          </svg>
+          <div class="donut-legend">
+            ${slices.map(s => `
+              <div class="legend-item">
+                <span class="legend-dot" style="background:${s.color}"></span>
+                <span class="legend-label">${s.cat}</span>
+                <span class="legend-value">${fmt(s.val)}</span>
+                <span class="muted" style="font-size:11px;min-width:38px;text-align:right;">${(s.pct*100).toFixed(0)}%</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Categorias</div>
+        <div class="page-subtitle">Pra onde o dinheiro foi em ${monthName(mk)}</div>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      ${renderDonut(pj, totalPJ, 'PJ · Agência')}
+      ${renderDonut(pf, totalPF, 'PF · Pessoal')}
+    </div>
+  `;
+};
+
+// ============================================================
+// ACCOUNTS
+// ============================================================
+VIEWS.accounts = () => {
+  const mk = DATA.currentMonth;
+  const byAccount = computeByAccount(mk);
+  const accMap = Object.fromEntries(byAccount);
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Contas & Cartões</div>
+        <div class="page-subtitle">Quanto rodou em cada uma em ${monthName(mk)}</div>
+      </div>
+    </div>
+    <div class="grid grid-3">
+      ${DATA.accounts.map(a => {
+        const spent = accMap[a.id] || 0;
+        return `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <div>
+                <div class="card-title">${a.name}</div>
+                <div style="font-size:10px;color:var(--text-faint);margin-top:-8px;margin-bottom:12px;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;">${a.kind.toUpperCase()} · ${a.tipo}</div>
+              </div>
+              <span class="tag ${a.tipo==='PJ'?'tag-pj':'tag-pf'}">${a.tipo}</span>
+            </div>
+            ${a.kind === 'conta' ? `
+              <div style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Saldo</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;margin-bottom:12px;">
+                <input type="number" value="${a.balance}" step="0.01" onblur="updateBalance('${a.id}', this.value)" style="background:transparent;border:none;color:inherit;font-family:inherit;font-size:inherit;font-weight:inherit;padding:0;width:100%;">
+              </div>
+            ` : ''}
+            <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);">
+              <span style="font-size:12px;color:var(--text-dim);">Movimentou no mês</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-weight:600;">${fmt(spent)}</span>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+};
+
+// ============================================================
+// FIXED, SUBS, INSTALLMENTS
+// ============================================================
+VIEWS.fixed = () => {
+  const totalPJ = DATA.fixed_pj.reduce((s,x)=>s+x.amount,0);
+  const totalPF = DATA.fixed_pf.reduce((s,x)=>s+x.amount,0);
+
+  const renderFix = (list, tipo) => `
+    <div class="card" style="padding:8px;">
+      <div class="item-list">
+        ${list.map(f => `
+          <div class="item-row">
+            <div class="item-icon">D${f.day}</div>
+            <div>
+              <div class="item-title">${f.name}</div>
+              <div class="item-sub"><span class="tag ${tipo==='PJ'?'tag-pj':'tag-pf'}">${tipo}</span> ${f.category}${f.remaining?` · ${f.remaining}x restantes`:''}</div>
+            </div>
+            <div class="item-amount negative">${fmt(f.amount)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Fixos</div>
+        <div class="page-subtitle">PJ ${fmt(totalPJ)}/mês · PF ${fmt(totalPF)}/mês · total ${fmt(totalPJ+totalPF)}/mês</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title" style="margin-bottom:12px;">PJ · Agência</div>
+      ${renderFix(DATA.fixed_pj, 'PJ')}
+    </div>
+    <div class="section">
+      <div class="section-title" style="margin-bottom:12px;">PF · Pessoal</div>
+      ${renderFix(DATA.fixed_pf, 'PF')}
+    </div>
+  `;
+};
+
+VIEWS.subscriptions = () => {
+  const totalPJ = DATA.subs_pj.reduce((s,x)=>s+x.amount,0);
+  const totalPF = DATA.subs_pf.reduce((s,x)=>s+x.amount,0);
+
+  const renderSubs = (list, tipo) => `
+    <div class="card" style="padding:8px;">
+      <div class="item-list">
+        ${list.map(s => `
+          <div class="item-row">
+            <div class="item-icon">${s.name.substring(0,2).toUpperCase()}</div>
+            <div>
+              <div class="item-title">${s.name}</div>
+              <div class="item-sub"><span class="tag tag-sub">assinatura</span> <span class="tag ${tipo==='PJ'?'tag-pj':'tag-pf'}">${tipo}</span></div>
+            </div>
+            <div class="item-amount negative">${fmt(s.amount)}/mês</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Assinaturas</div>
+        <div class="page-subtitle">PJ ${fmt(totalPJ)} · PF ${fmt(totalPF)} · total ${fmt(totalPJ+totalPF)}/mês (${fmt((totalPJ+totalPF)*12)}/ano)</div>
+      </div>
+    </div>
+    <div class="coach" style="margin-bottom:32px;">
+      <div class="coach-header">
+        <span class="coach-label">FILTRO</span>
+        <span class="coach-title">Revisa a cada 30 dias: usou nos últimos 7 dias?</span>
+      </div>
+      <div class="coach-list">
+        <div class="coach-item warn">
+          <div class="coach-icon">→</div>
+          <div>Se a resposta for <strong>não</strong>, cancela. Assinatura é o vazamento silencioso que ninguém vê.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title" style="margin-bottom:12px;">PJ</div>
+      ${renderSubs(DATA.subs_pj, 'PJ')}
+    </div>
+    <div class="section">
+      <div class="section-title" style="margin-bottom:12px;">PF</div>
+      ${renderSubs(DATA.subs_pf, 'PF')}
+    </div>
+  `;
+};
+
+VIEWS.installments = () => {
+  const total = DATA.installments.reduce((s,x)=>s+x.amount,0);
+
+  return `
+    <div class="topbar">
+      <div>
+        <div class="page-title">Parcelas</div>
+        <div class="page-subtitle">${DATA.installments.length} parcelas ativas · ${fmt(total)}/mês</div>
+      </div>
+    </div>
+    <div class="card" style="padding:8px;">
+      <div class="item-list">
+        ${DATA.installments.sort((a,b) => b.amount - a.amount).map(p => {
+          const end = new Date();
+          end.setMonth(end.getMonth() + p.remaining);
+          const endMK = `${end.getFullYear()}-${String(end.getMonth()+1).padStart(2,'0')}`;
+          return `
+            <div class="item-row">
+              <div class="item-icon">${p.remaining}x</div>
+              <div>
+                <div class="item-title">${p.name}</div>
+                <div class="item-sub"><span class="tag tag-parc">parcela</span> <span class="tag ${p.tipo==='PJ'?'tag-pj':'tag-pf'}">${p.tipo}</span> termina em ${monthName(endMK)}</div>
+              </div>
+              <div class="item-amount negative">${fmt(p.amount)}/mês</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+};
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function setFilter(key, val) {
+  txFilter[key] = val;
+  render();
+}
+
+async function deleteTx(id) {
+  if (!confirm('Apagar esse lançamento?')) return;
+  DATA.transactions = DATA.transactions.filter(t => t.id !== id);
+  await saveData(DATA);
+  render();
+}
+
+async function updateBalance(accId, val) {
+  const acc = DATA.accounts.find(a => a.id === accId);
+  if (acc) { acc.balance = Number(val) || 0; await saveData(DATA); }
+}
+
+function openAddModal() {
+  const mk = DATA.currentMonth;
+  const allCats = [...CATEGORIES_PJ, ...CATEGORIES_PF, 'Receita Cliente', 'Outros'];
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="modal-bg" id="addModal" onclick="if(event.target.id==='addModal')closeAddModal()">
+      <div class="modal">
+        <h2>Novo lançamento</h2>
+        <div class="modal-sub">Adiciona uma entrada ou saída manualmente</div>
+        <div class="form-grid">
+          <div class="col-3">
+            <label>Tipo</label>
+            <select id="f_kind">
+              <option value="expense">Despesa</option>
+              <option value="income">Receita</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label>PJ ou PF</label>
+            <select id="f_tipo">
+              <option value="PJ">PJ (Agência)</option>
+              <option value="PF">PF (Pessoal)</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label>Descrição</label>
+            <input type="text" id="f_desc" placeholder="ex: Jantar no Outback">
+          </div>
+          <div class="col-3">
+            <label>Valor (R$)</label>
+            <input type="number" id="f_amount" step="0.01" placeholder="0.00">
+          </div>
+          <div class="col-3">
+            <label>Data</label>
+            <input type="date" id="f_date" value="${todayISO()}">
+          </div>
+          <div class="col-3">
+            <label>Categoria</label>
+            <select id="f_cat">
+              ${allCats.map(c => `<option value="${c}">${c}</option>`).join('')}
+            </select>
+          </div>
+          <div class="col-3">
+            <label>Conta / Cartão</label>
+            <select id="f_acc">
+              ${DATA.accounts.map(a => `<option value="${a.id}">${a.name}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn" onclick="closeAddModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="submitNewTx()">Adicionar</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+function closeAddModal() { document.getElementById('addModal')?.remove(); }
+async function submitNewTx() {
+  const t = {
+    id: 'tx-' + Date.now() + '-' + Math.random().toString(36).slice(2,7),
+    type: document.getElementById('f_kind').value,
+    tipo: document.getElementById('f_tipo').value,
+    description: document.getElementById('f_desc').value || 'Sem descrição',
+    amount: Number(document.getElementById('f_amount').value) || 0,
+    date: document.getElementById('f_date').value,
+    category: document.getElementById('f_cat').value,
+    account: document.getElementById('f_acc').value,
+    fixo: false,
+  };
+  if (!t.amount) { alert('Coloca um valor'); return; }
+  DATA.transactions.push(t);
+  await saveData(DATA);
+  closeAddModal();
+  render();
+}
+
+function go(v) { currentView = v; render(); }
+
+function changeMonth(delta) {
+  const [y,m] = DATA.currentMonth.split('-').map(Number);
+  const d = new Date(y, m - 1 + delta, 1);
+  DATA.currentMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  saveData(DATA);
+  render();
+}
+
+async function exportJSON() {
+  const blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `chris-capital-${todayISO()}.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function resetAll() {
+  if (!confirm('Tem certeza? Isso vai apagar TODOS os dados e recarregar com o seed original.')) return;
+  DATA = buildInitialData();
+  await saveData(DATA);
+  render();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+(async function init() {
+  let saved = await loadData();
+  if (!saved || saved.version !== 2) {
+    DATA = buildInitialData();
+    await saveData(DATA);
+  } else {
+    DATA = saved;
+  }
+
+  document.getElementById('nav').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-view]');
+    if (btn) { currentView = btn.dataset.view; render(); }
+  });
+  document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
+  document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
+  document.getElementById('exportBtn').addEventListener('click', exportJSON);
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+  render();
+})();
+</script>
+</body>
+</html>
